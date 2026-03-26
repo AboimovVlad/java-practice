@@ -9,6 +9,6 @@
 
 # Зміст практичних робіт
 1. **День 1:** створення репозиторию та запуск першого завдання "Hello world!"
-  - посилання на код: посилання
+  - посилання на код: https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-1/practice/code/practiceProject/src/Main.java
   - скріншот роботи: скріншот
 2. **День 2:**
