@@ -24,5 +24,5 @@
 
 Виконато індивідуальне завдання під варіантом 13: Знайти двійкове уявлення цілої частини значення кінетичної енергії фізичного тіла при заданих значеннях маси та швидкості.
   - посилання на код: https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/code/practiceProject/src/Main.java
-  - скріншот роботи: https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/screenshots/screenshot-day2-test.png
-  - https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/screenshots/screenshot-day2-program_in_work.png
+  - скріншот роботи: [скріншот роботи програми](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/screenshots/screenshot-day2-program_in_work.png)
+  - [скріншот тестування](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/screenshots/screenshot-day2-tests.png)
