@@ -23,6 +23,6 @@
   - Написано докладні коментарі для автоматичної генерації документації засобами javadoc.
 
 Виконато індивідуальне завдання під варіантом 13: Знайти двійкове уявлення цілої частини значення кінетичної енергії фізичного тіла при заданих значеннях маси та швидкості.
-  - посилання на код: https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/code/practiceProject/src/Main.java
+  - [посилання на код](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/code/practiceProject/src/Main.java)
   - скріншот роботи: [скріншот роботи програми](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/screenshots/screenshot-day2-program_in_work.png)
   - [скріншот тестування](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-2/practice/screenshots/screenshot-day2-tests.png)
