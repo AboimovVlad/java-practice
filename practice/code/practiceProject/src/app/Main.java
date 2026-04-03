@@ -1,51 +1,68 @@
 package app;
 
-import java.io.*;
 import java.util.Scanner;
 
 /**
- * Головний клас програми для демонстрації збереження та відновлення стану об'єкта.
- * Реалізує діалоговий режим роботи з користувачем через консоль.
- * Демонструє роботу з серіалізацією та використання transient полів.
+ * Головний клас додатка, що керує діалоговим інтерфейсом користувача.
+ * Використовує патерн Factory Method для створення об'єктів відображення
+ * та делегує обчислювальну логіку класу {@link Solver}.
  *
- * @author Абоімов Владислав
- * @version 1.0
+ * @author Aboimov Vlad
+ * @version 1.2
  */
 public class Main {
+    private final Solver solver = new Solver();
+    private final ViewFactory factory = new TextViewFactory();
+    private final ResultView view = factory.createView();
+    private final Scanner scanner = new Scanner(System.in);
+
     /**
-     * Точка входу в програму. Забезпечує роботу консольного меню.
-     * Дозволяє вводити аргументи, виконувати обчислення, зберігати результати
-     * у файл та відновлювати їх.
+     * Основний метод для запуску діалогового меню.
+     * Забезпечує обробку команд: обчислення, перегляд історії, збереження та завантаження.
+     */
+    public void menu() {
+        while (true) {
+            System.out.println("1. Обчислити | 2. Історія | 3. Зберегти | 4. Відновити | 0. Вихід");
+            System.out.print("Вибір: ");
+            String choice = scanner.next();
+
+            try {
+                switch (choice) {
+                    case "1" -> {
+                        System.out.println("Введіть 4 кути:");
+                        double[] angles = new double[4];
+                        for (int i = 0; i < 4; i++) angles[i] = scanner.nextDouble();
+
+                        // Main просто викликає метод Solver
+                        DataModel res = solver.calculate(angles);
+                        view.viewAll(res); // Використовуємо метод за замовчуванням
+                    }
+                    case "2" -> {
+                        for (DataModel d : solver.getHistory()) view.viewBody(d);
+                    }
+                    case "3" -> {
+                        solver.save("history.ser");
+                        System.out.println("Збережено.");
+                    }
+                    case "4" -> {
+                        solver.load("history.ser");
+                        System.out.println("Відновлено.");
+                    }
+                    case "0" -> System.exit(0);
+                }
+            } catch (Exception e) {
+                System.out.println("Помилка: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Точка входу в програму.
+     * Створює екземпляр класу Main та запускає діалоговий інтерфейс.
      *
-     * @param args аргументи командного рядка (не використовуються).
+     * @param args аргументи командного рядка (не використовуються)
      */
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Solver solver = new Solver();
-        DataModel model = null;
-
-        while (true) {
-            System.out.println("\n1. Розрахувати 2. Зберегти 3. Завантажити 4. Вихід");
-            int choice = sc.nextInt();
-
-            if (choice == 1) {
-                double[] angles = new double[4];
-                System.out.println("Введіть 4 числа (через пробіл):");
-                for (int i = 0; i < 4; i++) angles[i] = sc.nextDouble();
-                model = solver.calculate(angles);
-                System.out.println("Готово: " + model);
-            } else if (choice == 2 && model != null) {
-                try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data.ser"))) {
-                    out.writeObject(model);
-                    System.out.println("Об'єкт збережено.");
-                } catch (IOException e) { e.printStackTrace(); }
-            } else if (choice == 3) {
-                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("data.ser"))) {
-                    model = (DataModel) in.readObject();
-                    System.out.println("Об'єкт завантажено: " + model);
-                    System.out.println("(Зауважте, час розрахунку тепер null, так як поле transient)");
-                } catch (Exception e) { System.out.println("Файл не найден."); }
-            } else if (choice == 4) break;
-        }
+        new Main().menu();
     }
 }

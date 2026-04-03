@@ -1,34 +1,51 @@
 package app;
 
+import java.io.*;
+import java.util.*;
+
 /**
- * Клас для реалізації логіки обчислень згідно з індивідуальним завданням.
- * Виконує знаходження середнього арифметичного функції та підрахунок одиниць
- * у двійковому представленні результату.
+ * Клас Solver відповідає за реалізацію обчислювальної логіки програми
+ * та керування колекцією результатів обчислень.
+ * Забезпечує обчислення індивідуального завдання, а також серіалізацію
+ * та десеріалізацію списку результатів.
  *
- * @author Абоімов Владислав
- * @version 1.0
+ * @author Aboimov Vlad
+ * @version 1.2
  */
 public class Solver {
-    /**
-     * Виконує обчислення середнього арифметичного значення функції 1000*sin(a)
-     * для чотирьох аргументів та визначає кількість одиниць у двійковому поданні
-     * цілої частини результату.
-     *
-     * @param angles масив з чотирьох довільних аргументів (кутів у радіанах).
-     * @return об'єкт {@link DataModel}, що містить вхідні дані та результат обчислень.
-     */
+    /** Колекція результатів */
+    private List<DataModel> history = new ArrayList<>();
+
+    /** Виконує обчислення */
     public DataModel calculate(double[] angles) {
         double sum = 0;
-        // Обчислення суми значень функції 1000 * sin(alpha)
         for (double a : angles) {
             sum += 1000 * Math.sin(a);
         }
-        // Знаходження цілої частини середнього арифметичного
         int avg = (int) (sum / angles.length);
-        // Підрахунок кількості одиниць у двійковому поданні (використовується модуль числа)
         int onesCount = Integer.bitCount(Math.abs(avg));
 
-        // Повернення результатів у вигляді об'єкта класу даних
-        return new DataModel(angles, onesCount);
+        DataModel result = new DataModel(angles, onesCount);
+        history.add(result);
+        return result;
+    }
+
+    public List<DataModel> getHistory() {
+        return history;
+    }
+
+    /** Логіка збереження */
+    public void save(String fileName) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(history);
+        }
+    }
+
+    /** Логіка завантаження */
+    @SuppressWarnings("unchecked")
+    public void load(String fileName) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+            history = (List<DataModel>) ois.readObject();
+        }
     }
 }

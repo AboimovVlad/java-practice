@@ -8,11 +8,14 @@ import java.io.ObjectOutputStream;
 import app.DataModel;
 import app.Solver;
 import org.junit.Test;
-
 import static org.junit.Assert.*;
+import java.util.*;
 
 /**
- * Класс для тестування коректності вирахувань и серіалізації.
+ * Клас для тестування основної функціональності проекту.
+ * Перевіряє коректність обчислень, серіалізацію та роботу з колекціями.
+ * @author Aboimov Vlad
+ * @version 1.2
  */
 public class MainTest {
     /**
@@ -45,5 +48,19 @@ public class MainTest {
 
         assertEquals(original.getResult(), restored.getResult());
         assertNull(restored.getCalcTime());
+    }
+
+    /**
+     * Тестування роботи з колекцією результатів.
+     * Перевіряє коректність додавання об'єктів та збереження їх властивостей.
+     */
+    @Test
+    public void testCollectionLogic() {
+        List<DataModel> list = new ArrayList<>();
+        DataModel d1 = new DataModel(new double[]{1, 2}, 5);
+        list.add(d1);
+
+        assertEquals(1, list.size());
+        assertArrayEquals(new double[]{1, 2}, list.get(0).getAngles(), 0.01);
     }
 }
