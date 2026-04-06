@@ -5,8 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import app.DataModel;
-import app.Solver;
+import app.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.*;
@@ -62,5 +61,40 @@ public class MainTest {
 
         assertEquals(1, list.size());
         assertArrayEquals(new double[]{1, 2}, list.get(0).getAngles(), 0.01);
+    }
+
+    /**
+     * Тестування поліморфізму (Dynamic Method Dispatch) та Factory Method.
+     * Перевіряє, чи створюють фабрики відповідні об'єкти інтерфейсу ResultView.
+     */
+    @Test
+    public void testPolymorphismAndFactories() {
+        // Тестування текстової фабрики
+        ViewFactory textFactory = new TextViewFactory();
+        ResultView textView = textFactory.createView();
+        assertTrue("Очікувався об'єкт TextView", textView instanceof TextView);
+
+        // Тестування табличної фабрики
+        ViewFactory tableFactory = new TableViewFactory(50);
+        ResultView tableView = tableFactory.createView();
+        assertTrue("Очікувався об'єкт TableView", tableView instanceof TableView);
+    }
+
+    /**
+     * Тестування перевантаження методів (Overloading).
+     * Перевіряє можливість виклику перевантаженого методу viewBody з кастомним заголовком.
+     */
+    @Test
+    public void testOverloading() {
+        DataModel data = new DataModel(new double[]{0, 0, 0, 0}, 0);
+        ResultView view = new TextView();
+
+        // Перевіряємо, чи викликається перевантажений метод без помилок
+        try {
+            view.viewBody(data, "Тестовий заголовок історії");
+            assertTrue(true);
+        } catch (Exception e) {
+            fail("Помилка при виклику перевантаженого методу viewBody: " + e.getMessage());
+        }
     }
 }

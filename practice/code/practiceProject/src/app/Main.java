@@ -12,8 +12,8 @@ import java.util.Scanner;
  */
 public class Main {
     private final Solver solver = new Solver();
-    private final ViewFactory factory = new TextViewFactory();
-    private final ResultView view = factory.createView();
+    private ViewFactory factory;
+    private ResultView view;
     private final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -21,32 +21,40 @@ public class Main {
      * Забезпечує обробку команд: обчислення, перегляд історії, збереження та завантаження.
      */
     public void menu() {
-        while (true) {
-            System.out.println("1. Обчислити | 2. Історія | 3. Зберегти | 4. Відновити | 0. Вихід");
-            System.out.print("Вибір: ");
-            String choice = scanner.next();
+        // 1. Користувач обирає режим відображення
+        System.out.println("Оберіть режим: 1-Текст, 2-Таблиця");
+        int mode = scanner.nextInt();
 
+        if (mode == 2) {
+            System.out.print("Введіть ширину таблиці (напр. 40): ");
+            int width = scanner.nextInt();
+            factory = new TableViewFactory(width);
+        } else {
+            factory = new TextViewFactory();
+        }
+
+        // Динамічне призначення об'єкта (Dynamic Dispatch)
+        view = factory.createView();
+
+        while (true) {
+            System.out.println("1. Обчислити | 2. Історія | 0. Вихід");
+            String choice = scanner.next();
             try {
                 switch (choice) {
                     case "1" -> {
                         System.out.println("Введіть 4 кути:");
                         double[] angles = new double[4];
                         for (int i = 0; i < 4; i++) angles[i] = scanner.nextDouble();
-
-                        // Main просто викликає метод Solver
                         DataModel res = solver.calculate(angles);
-                        view.viewAll(res); // Використовуємо метод за замовчуванням
+
+                        // Поліморфний виклик методу
+                        view.viewAll(res);
                     }
                     case "2" -> {
-                        for (DataModel d : solver.getHistory()) view.viewBody(d);
-                    }
-                    case "3" -> {
-                        solver.save("history.ser");
-                        System.out.println("Збережено.");
-                    }
-                    case "4" -> {
-                        solver.load("history.ser");
-                        System.out.println("Відновлено.");
+                        // Демонстрація Overloading (перевантаження)
+                        for (DataModel d : solver.getHistory()) {
+                            view.viewBody(d, "Запис історії");
+                        }
                     }
                     case "0" -> System.exit(0);
                 }
@@ -55,6 +63,7 @@ public class Main {
             }
         }
     }
+
 
     /**
      * Точка входу в програму.

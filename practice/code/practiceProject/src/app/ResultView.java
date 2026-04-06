@@ -16,6 +16,12 @@ public interface ResultView {
     /** Виведення завершальної частини */
     void viewFooter();
 
+    /** Виведення основної частини з даними та кастамізованим заголовком */
+    default void viewBody(DataModel data, String customTitle) {
+        System.out.println("--- " + customTitle + " ---");
+        viewBody(data);
+    }
+
     default void viewAll(DataModel data) {
         viewHeader();
         viewBody(data);
