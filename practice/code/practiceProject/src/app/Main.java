@@ -13,6 +13,7 @@ import java.util.Stack;
 public class Main {
     /** Використання Singleton екземпляра Solver */
     private final Solver solver = Solver.getInstance();
+    private final CommandQueue worker = new CommandQueue();
 
     /** Стек для зберігання виконаних команд (для Undo) */
     private final Stack<Command> undoStack = new Stack<>();
@@ -22,6 +23,9 @@ public class Main {
     private final Scanner scanner = new Scanner(System.in);
 
     public void menu() {
+        Thread workerThread = new Thread(worker);
+        workerThread.start();
+
         System.out.println("Оберіть режим: 1-Текст, 2-Таблиця");
         int mode = scanner.nextInt();
 
@@ -36,7 +40,7 @@ public class Main {
         view = factory.createView();
 
         while (true) {
-            System.out.println("\nМеню: 1-Обчислити | 2-Скасувати (Undo) | 3-Макрокоманда | 4-Історія | 0-Вихід");
+            System.out.println("\nМеню: 1-Обчислити | 2-Скасувати (Undo) | 3-Макрокоманда | 4-Історія | 5. Статистика (Parallel) | 6. Фонове обчислення (Worker) | 0. Вихід");
             System.out.print("Вибір: ");
             String choice = scanner.next();
             try {
@@ -83,7 +87,15 @@ public class Main {
                             }
                         }
                     }
-                    case "0" -> System.exit(0);
+                    case "5" -> solver.showStatistics();
+                    case "6" -> {
+                        System.out.println("Команду додано в чергу...");
+                        worker.put(new CalcCommand(solver, new double[]{Math.random(), 1}));
+                    }
+                    case "0" -> {
+                        worker.stop();
+                        System.exit(0);
+                    }
                     default -> System.out.println("Невірна команда.");
                 }
             } catch (Exception e) {

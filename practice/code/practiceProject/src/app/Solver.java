@@ -2,6 +2,7 @@ package app;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Клас Solver відповідає за реалізацію обчислювальної логіки програми
@@ -64,5 +65,19 @@ public class Solver {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
             history = (List<DataModel>) ois.readObject();
         }
+    }
+
+    /** Демонстрація паралельної обробки: статистичні показники результатів */
+    public void showStatistics() {
+        if (history.isEmpty()) return;
+
+        DoubleSummaryStatistics stats = history.parallelStream()
+                .collect(Collectors.summarizingDouble(DataModel::getResult));
+
+        System.out.println("\n--- Паралельна статистика результатів ---");
+        System.out.println("Максимум: " + stats.getMax());
+        System.out.println("Мінімум: " + stats.getMin());
+        System.out.println("Середнє значення: " + stats.getAverage());
+        System.out.println("Загальна кількість одиниць: " + stats.getSum());
     }
 }

@@ -126,4 +126,19 @@ public class MainTest {
         Solver s2 = Solver.getInstance();
         assertSame(s1, s2);
     }
+
+    @Test
+    public void testParallelStats() {
+        Solver solver = Solver.getInstance();
+        solver.calculate(new double[]{0}); // результат 0
+        solver.calculate(new double[]{Math.PI/2}); // результат > 0
+
+        // Перевірка, що статистика не викликає помилок
+        try {
+            solver.showStatistics();
+            assertTrue(true);
+        } catch (Exception e) {
+            fail("Паралельна обробка зламалася: " + e.getMessage());
+        }
+    }
 }
