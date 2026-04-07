@@ -1,27 +1,27 @@
 package app;
 
 import java.util.Scanner;
+import java.util.Stack;
 
 /**
- * Головний клас додатка, що керує діалоговим інтерфейсом користувача.
- * Використовує патерн Factory Method для створення об'єктів відображення
- * та делегує обчислювальну логіку класу {@link Solver}.
+ * Оновлений головний клас із підтримкою скасування операцій (Undo),
+ * макрокоманд та патерну Singleton.
  *
  * @author Aboimov Vlad
- * @version 1.2
+ * @version 1.3
  */
 public class Main {
-    private final Solver solver = new Solver();
+    /** Використання Singleton екземпляра Solver */
+    private final Solver solver = Solver.getInstance();
+
+    /** Стек для зберігання виконаних команд (для Undo) */
+    private final Stack<Command> undoStack = new Stack<>();
+
     private ViewFactory factory;
     private ResultView view;
     private final Scanner scanner = new Scanner(System.in);
 
-    /**
-     * Основний метод для запуску діалогового меню.
-     * Забезпечує обробку команд: обчислення, перегляд історії, збереження та завантаження.
-     */
     public void menu() {
-        // 1. Користувач обирає режим відображення
         System.out.println("Оберіть режим: 1-Текст, 2-Таблиця");
         int mode = scanner.nextInt();
 
@@ -33,11 +33,11 @@ public class Main {
             factory = new TextViewFactory();
         }
 
-        // Динамічне призначення об'єкта (Dynamic Dispatch)
         view = factory.createView();
 
         while (true) {
-            System.out.println("1. Обчислити | 2. Історія | 0. Вихід");
+            System.out.println("\nМеню: 1-Обчислити | 2-Скасувати (Undo) | 3-Макрокоманда | 4-Історія | 0-Вихід");
+            System.out.print("Вибір: ");
             String choice = scanner.next();
             try {
                 switch (choice) {
@@ -45,18 +45,46 @@ public class Main {
                         System.out.println("Введіть 4 кути:");
                         double[] angles = new double[4];
                         for (int i = 0; i < 4; i++) angles[i] = scanner.nextDouble();
-                        DataModel res = solver.calculate(angles);
 
-                        // Поліморфний виклик методу
-                        view.viewAll(res);
+                        Command cmd = new CalcCommand(solver, angles);
+                        cmd.execute();
+                        undoStack.push(cmd);
+
+                        view.viewAll(solver.getHistory().get(solver.getHistory().size() - 1));
                     }
                     case "2" -> {
-                        // Демонстрація Overloading (перевантаження)
-                        for (DataModel d : solver.getHistory()) {
-                            view.viewBody(d, "Запис історії");
+                        if (!undoStack.isEmpty()) {
+                            Command cmd = undoStack.pop();
+                            cmd.undo();
+                            System.out.println("Останню операцію скасовано.");
+                        } else {
+                            System.out.println("Немає операцій для скасування.");
+                        }
+                    }
+                    case "3" -> {
+                        System.out.println("Виконання макрокоманди (автоматичне обчислення 3-х пресетів)...");
+                        MacroCommand macro = new MacroCommand();
+
+                        // Додаємо кілька команд у макрокоманду
+                        macro.add(new CalcCommand(solver, new double[]{0, 0, 0, 0}));
+                        macro.add(new CalcCommand(solver, new double[]{Math.PI/2, Math.PI/2, Math.PI/2, Math.PI/2}));
+                        macro.add(new CalcCommand(solver, new double[]{1.0, 2.0, 3.0, 4.0}));
+
+                        macro.execute();
+                        undoStack.push(macro);
+                        System.out.println("Макрокоманду виконано.");
+                    }
+                    case "4" -> {
+                        if (solver.getHistory().isEmpty()) {
+                            System.out.println("Історія порожня.");
+                        } else {
+                            for (DataModel d : solver.getHistory()) {
+                                view.viewBody(d, "Запис історії");
+                            }
                         }
                     }
                     case "0" -> System.exit(0);
+                    default -> System.out.println("Невірна команда.");
                 }
             } catch (Exception e) {
                 System.out.println("Помилка: " + e.getMessage());
@@ -64,13 +92,6 @@ public class Main {
         }
     }
 
-
-    /**
-     * Точка входу в програму.
-     * Створює екземпляр класу Main та запускає діалоговий інтерфейс.
-     *
-     * @param args аргументи командного рядка (не використовуються)
-     */
     public static void main(String[] args) {
         new Main().menu();
     }

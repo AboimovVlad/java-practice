@@ -16,6 +16,16 @@ public class Solver {
     /** Колекція результатів */
     private List<DataModel> history = new ArrayList<>();
 
+    private static Solver instance;
+    private Solver() {}
+
+    public static synchronized Solver getInstance() {
+        if (instance == null) {
+            instance = new Solver();
+        }
+        return instance;
+    }
+
     /** Виконує обчислення */
     public DataModel calculate(double[] angles) {
         double sum = 0;
@@ -28,6 +38,13 @@ public class Solver {
         DataModel result = new DataModel(angles, onesCount);
         history.add(result);
         return result;
+    }
+
+    /** Видаляє останній доданий результат з історії */
+    public void removeLast() {
+        if (!history.isEmpty()) {
+            history.remove(history.size() - 1);
+        }
     }
 
     public List<DataModel> getHistory() {

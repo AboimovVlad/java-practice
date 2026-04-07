@@ -22,7 +22,7 @@ public class MainTest {
      */
     @Test
     public void testCalculation() {
-        Solver solver = new Solver();
+        Solver solver = Solver.getInstance();
         double[] angles = {0, Math.PI, 2 * Math.PI, 3 * Math.PI};
         DataModel res = solver.calculate(angles);
         assertEquals(0, res.getResult());
@@ -96,5 +96,34 @@ public class MainTest {
         } catch (Exception e) {
             fail("Помилка при виклику перевантаженого методу viewBody: " + e.getMessage());
         }
+    }
+
+    /**
+     * Тестування функціоналу скасування операції (Undo).
+     * Перевіряє, чи коректно команда {@link CalcCommand} видаляє результат з історії
+     * після виконання методу undo().
+     */
+    @Test
+    public void testUndo() {
+        Solver solver = Solver.getInstance();
+        int initialSize = solver.getHistory().size();
+
+        Command cmd = new CalcCommand(solver, new double[]{0,0,0,0});
+        cmd.execute();
+        assertEquals(initialSize + 1, solver.getHistory().size());
+
+        cmd.undo();
+        assertEquals(initialSize, solver.getHistory().size());
+    }
+
+    /**
+     * Тестування шаблону проектування Singleton.
+     * Перевіряє, чи повертає метод getInstance() один і той самий об'єкт.
+     */
+    @Test
+    public void testSingleton() {
+        Solver s1 = Solver.getInstance();
+        Solver s2 = Solver.getInstance();
+        assertSame(s1, s2);
     }
 }
