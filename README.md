@@ -62,9 +62,9 @@
   - Макрокоманда: Клас MacroCommand дозволяє виконувати та скасовувати групу команд як одну цілу.
   - Singleton: Клас Solver обмежений одним екземпляром через приватний конструктор та метод getInstance().
     
-  - [посилання на код](https://github.com/AboimovVlad/java-practice/tree/%F0%9F%93%85day-4/practice/code/practiceProject/src/app)
-  - скріншоти: [скріншот роботи програми](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-4/practice/screenshots/screenshot-day4-program_in_work.png)
-  - [скріншот тестування](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-4/practice/screenshots/screenshot-day4-tests.png)
+  - [посилання на код](https://github.com/AboimovVlad/java-practice/tree/%F0%9F%93%85day-5/practice/code/practiceProject/src/app)
+  - скріншоти: [скріншот роботи програми](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-5/practice/screenshots/screenshot-day5-program_in_work.png)
+  - [скріншот тестування](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-5/practice/screenshots/screenshot-day5-tests.png)
 
 ---
 
@@ -72,6 +72,6 @@
   - Паралельна обробка: Реалізована через parallelStream() у класі Solver для обчислення статистичних даних (DoubleSummaryStatistics) колекції history.
   - Worker Thread: Реалізовано через клас CommandQueue, який використовує BlockingQueue та окремий потік для асинхронного виконання команд поза основним потоком інтерфейсу.
     
-  - [посилання на код](https://github.com/AboimovVlad/java-practice/tree/%F0%9F%93%85day-4/practice/code/practiceProject/src/app)
-  - скріншоти: [скріншот роботи програми](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-4/practice/screenshots/screenshot-day4-program_in_work.png)
-  - [скріншот тестування](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-4/practice/screenshots/screenshot-day4-tests.png)
+  - [посилання на код](https://github.com/AboimovVlad/java-practice/tree/%F0%9F%93%85day-6/practice/code/practiceProject/src/app)
+  - скріншоти: [скріншот роботи програми](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-6/practice/screenshots/screenshot-day6-program_in_work.png)
+  - [скріншот тестування](https://github.com/AboimovVlad/java-practice/blob/%F0%9F%93%85day-6/practice/screenshots/screenshot-day6-tests.png)
